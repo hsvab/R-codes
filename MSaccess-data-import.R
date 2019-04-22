@@ -16,7 +16,13 @@ install.packages("RODBC")
 # Tutorial do pacote disponíel em: https://cran.r-project.org/web/packages/ImportExport/ImportExport.pdf
 install.packages("ImportExport")
 library (ImportExport)
+ODRio <- access_import("/home/haydee/Documentos/OD-Rio/OD_RMRJ.mdb")
 
-# sudo apt-get install mdbtools
-access_import("/home/haydee/Documentos/OD-Rio/OD_RMRJ.mdb")
+#### OU ####
 
+# No terminal: sudo apt-get install mdbtools
+install.packages("Hmisc")
+library(Hmisc)
+ODRio_fam <- mdb.get("/home/haydee/Documentos/OD-Rio/OD_RMRJ.mdb", tables = "Tela1a")
+ODRio_viag <- mdb.get("/home/haydee/Documentos/OD-Rio/OD_RMRJ.mdb", tables = "Tela2a")
+ODRio_pess <- mdb.get("/home/haydee/Documentos/OD-Rio/OD_RMRJ.mdb", tables = "Tela3a")
