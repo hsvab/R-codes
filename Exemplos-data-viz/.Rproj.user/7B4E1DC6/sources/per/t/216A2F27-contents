@@ -1,0 +1,146 @@
+# Bibliotecas ----
+install.packages("tidyverse")
+install.packages("sidrar")
+install.packages("lubridate")
+install.packages("plotly")
+install.packages("xts")
+install.packages("highcharter")
+install.packages("scales")
+library(tidyverse)
+library(sidrar)
+library(lubridate)
+library(highcharter)
+
+######################################################################
+# https://sidra.ibge.gov.br/
+# Buscando dados no Sidra do IBGE, vamos trabalhar com o IPCA nesse exemplo.
+# Vamos utilizar a tabela 1419 do site, onde traz algumas infos ref. IPCA.
+# https://sidra.ibge.gov.br/tabela/1419
+# Autoria: Ariane Meneguetti
+######################################################################
+
+# traz o código das infos disponíveis na tabela 1419 (ipca) do sidra
+info_sidra(1419)
+
+#####
+# Baixar dados do IPCA via sidra-R
+#####
+
+# modelo 1: via link com parâmetros da api - ver http://api.sidra.ibge.gov.br/home/ajuda
+# t – para especificar o código da tabela de onde se deseja extrair os dados.
+# n<nível territorial> – para especificar os níveis territoriais e suas unidades territoriais desejadas.
+# n1 – Brasil, n2 – Grande Região, n3 – Unidade da Federação, n6 – Município, etc. 
+# O parâmetro n<nível territorial> pode ser seguido pela constante all para especificar todas as unidades territoriais disponíveis na tabela.
+# v – para especificar as variáveis desejadas.
+# 2265 - Variação acumulada em meses (%)
+# p – para especificar os períodos (meses, anos etc.) desejados.
+# O parâmetro p pode ser seguido pela constante all para especificar todos os períodos disponíveis.
+# c<classificação> – para especificar as classificações da tabela e suas categorias desejadas
+# especificar
+# d – para especificar com quantas casas decimais serão formatados os valores.
+ipca <- get_sidra(api = "/t/1419/n1/all/v/2265/p/all/c315/7169,7170,7445,7486,7558,7625,7660,7712,7766,7786/d/v2265%202")
+
+# modelo 2: via parâmetros dentro da função (usar f. info_sidra para ajudar)
+ipca <- get_sidra(1419,
+                  variable = 2265, # var. acumulada em 12 meses
+                  period = "all", # c("201212-201912")
+                  # Estes 3 primeiros parâmetros são obrigatórios
+                  geo = "Brazil", # Limite do Sidra é 50mil linha, cuidado! 
+                  # Exemplo, se filtar por cidade talvez estoure o limite, 
+                  # aí é possível usar geo.filter e ir filtrando por estado.
+                  classific = "c315",
+                  category = list( # selecionando apenas alguns grupos do ipca
+                    c(7169, # índice geral
+                      7170, # 1.alimentação e bebidas
+                      7445, # 2.habitação
+                      7486, # 3.artigos de residência
+                      7558, # 4.vestuário
+                      7625, # 5.transportes
+                      7660, # 6.saúde cuidados pessoais
+                      7712, # 7.despesas pessoais
+                      7766, # 8.educação
+                      7786))# 9.comunicação
+                  )
+glimpse(ipca)
+
+  
+# Renomeando vars e transformando tipos de dados
+  ipca_r <- ipca %>% # renomeando algumas colunas para facilitar manuseio
+    rename(cod_brasil = `Brasil (Código)`,
+           data = `Mês (Código)`,
+           cod_variavel = `Variável (Código)`,
+           cod_grupo = `Geral, grupo, subgrupo, item e subitem (Código)`,
+           cod_unid = `Unidade de Medida (Código)`,
+           IPCA = Valor) %>% # Transformando vars. código txt para tipo numérico
+    mutate_at(vars(contains("cod_")), as.numeric) %>% 
+    mutate(data = ymd(paste0(data, "01"))) # Transformando data
+  
+  glimpse(ipca_r)
+
+
+# Selecionando o índice geral do ipca e apenas vars. data e valor
+ipca_geral <- ipca_r %>% 
+  filter(cod_grupo == 7169, !is.na(IPCA)) %>% # Filtrando o índice geral e datas onde tem info (para a var. acumulada 12m - dados a partir de dez/12)
+  select(data, IPCA)
+
+
+
+######################################################################
+# Graficando o ipca geral via ggplot
+g <- ipca_geral %>% 
+  ggplot(aes(x = data, y = IPCA))+
+  geom_line(color="blue")+
+  # adicionando título e fonte
+  labs(title = "IPCA - Índice Geral", 
+       subtitle = "Variação acumulada em 12 meses",
+       caption = "Fonte: IBGE") +
+  # alterando a aparência dos eixos x e y
+  scale_x_date(date_labels = "%b'%y", date_breaks = "6 month")+ # %b -> mês em formato de texto, %m -> mês em numero
+  scale_y_continuous(labels =
+                       scales::percent_format(big.mark = ".",
+                                              decimal.mark = ",",
+                                              scale = 1))+ # Por default o scale é 100
+  theme_minimal()+ # alterando o tema do gráfico -> ver outros na cheat sheet
+  theme(plot.title = element_text(face ="bold"), # título em negrito [color = "red"]
+        axis.title = element_blank(), # retirar o nome do label
+        #axis.text = element_text(size = 10, color="black"),
+        #axis.text.x = element_text(angle = 45, vjust = -0.2), vjust é ajuste vertical pra descer o texto
+        axis.line.x = element_line("grey85"), # mudando  cor do eixo x
+        #axis.line.y = element_blank(), # depende de acordo com theme escolhido
+        axis.ticks = element_line("grey85"), # cor dos risquinhos rente ao label
+        legend.position="none", # retirar a legenda se houver
+        panel.grid.minor.x = element_blank(), # retira as linhas aux. verticais
+        panel.grid.major.x = element_blank(), # retira as linhas princ. verticais
+        panel.border = element_rect(fill=NA, size=0.25, color="grey85"),
+        plot.margin = margin(0.3, 0.7, 0.3, 0.3, "cm") # alterando o tamanho das margens -> T, R, B, L
+        #plot.background = element_rect(fill = "grey92")
+  )
+
+g
+
+######################################################################
+# Testando o ggplotly
+plotly::ggplotly(g)
+
+
+######################################################################
+# graficando o ipca geral via highcharter
+# 1. criando formato série temporal via pacote xts
+serie_ipca <- xts::xts(ipca_geral$IPCA, order.by = ipca_geral$data)
+names(serie_ipca) <- "IPCA"
+
+# 2. graficando...
+highchart(type = "stock") %>% 
+  hc_add_series(serie_ipca$IPCA, id = "serie_ipca", name = "IPCA") %>% #add series adiciona serie temporal
+  hc_title(text = "IPCA - Índice Geral") %>% 
+  hc_subtitle(text = "Variação acumulada em 12 meses") %>% 
+  hc_yAxis(opposite = F, # mudando o lado do eixo y e formatação do número
+           labels = list(format = "{value}%")) %>% 
+  hc_tooltip(valueDecimals = 2, # formatação do número ao passar o mouse
+             pointFormat ="{series.name}:
+                           <b>{point.y:.2f}%</b>") %>%
+  hc_credits(enabled = TRUE, text = "Fonte: IBGE",
+             href = "https://sidra.ibge.gov.br/",
+             style = list(fontSize = "11px", color= "#000000"))
+
+# mais exemplos e tipos de gráficos em http://jkunst.com/highcharter/

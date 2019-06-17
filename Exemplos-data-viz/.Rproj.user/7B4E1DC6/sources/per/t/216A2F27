@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1560546343897.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2016555151",
+    "id" : "216A2F27",
+    "lastKnownWriteTime" : 1560556956,
+    "last_content_update" : 1560556956325,
+    "path" : "~/Documentos/apresentacoes_eventos_cursos/2019-06-15-10-MeetUp-RLadies/Exemplos-data-viz/ex-ibge-ipca.R",
+    "project_path" : "ex-ibge-ipca.R",
+    "properties" : {
+        "cursorPosition" : "131,18",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

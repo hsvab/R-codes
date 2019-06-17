@@ -1,0 +1,13 @@
+# install.packages("pdftools")
+# library(pdftools)
+install.packages("tidyverse")
+install.packages("tabulizer")
+library(tabulizer)
+library(tidyverse)
+url <- "http://files.antp.org.br/2018/copia-de-tarifas_2005-a-atual-1.pdf"
+output <- extract_tables(url, encoding = "UTF-8") %>% as.data.frame()
+# Trabalhar datas com lubridate
+colnames(output) <- as.character(unlist(output[1,]))
+output <- output[-1, ]
+output_final <- output[, -c(21,41)]
+class(output) 

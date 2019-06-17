@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1560606375646.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1379021011",
+    "id" : "BA0AC5A",
+    "lastKnownWriteTime" : 1560621032,
+    "last_content_update" : 1560621032759,
+    "path" : "~/Documentos/apresentacoes_eventos_cursos/2019-06-15-10-MeetUp-RLadies/Exemplos-data-viz/Mapa_frequencias.R",
+    "project_path" : "Mapa_frequencias.R",
+    "properties" : {
+        "cursorPosition" : "5,27",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

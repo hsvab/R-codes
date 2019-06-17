@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1560613494180.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4192688290",
+    "id" : "94A20EBA",
+    "lastKnownWriteTime" : 1560607244,
+    "last_content_update" : 1560607244,
+    "path" : "~/Documentos/apresentacoes_eventos_cursos/2019-06-15-10-MeetUp-RLadies/Exemplos-data-viz/ex-tarifas.R",
+    "project_path" : "ex-tarifas.R",
+    "properties" : {
+        "cursorPosition" : "14,40",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

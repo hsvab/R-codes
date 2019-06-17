@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1560613451775.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3834283033",
+    "id" : "301A7C4C",
+    "lastKnownWriteTime" : 1560613468,
+    "last_content_update" : 1560613468422,
+    "path" : "~/Documentos/apresentacoes_eventos_cursos/2019-06-15-10-MeetUp-RLadies/Exemplos-data-viz/ggplot_e_as_bases_r.Rmd",
+    "project_path" : "ggplot_e_as_bases_r.Rmd",
+    "properties" : {
+        "cursorPosition" : "223,16",
+        "scrollLine" : "212"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
